@@ -1,0 +1,45 @@
+---
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    upgrade: true
+    update_cache: true
+    cache_valid_time: 86400
+  tags: update
+
+- name: Install common packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items: "{{ packages }}"
+  tags: install
+
+- name: Add user
+  user:
+    name: "{{ item.name }}"
+    password: "{{ item.password }}" # hashed password 
+    create_home: true
+    shell: /bin/bash
+    groups: sudo
+    append: yes
+  with_items: "{{ users }}"
+  tags: add_user
+
+- name: Add SSH keys
+  ansible.posix.authorized_key:                                                
+    user: "{{ item.0.name }}"    
+    state: present                                                             
+    key: "{{ item.1 }}"
+  loop: "{{ users | subelements('ssh_keys') }}" 
+  tags: add_user
+
+- name: Upload .bashrc
+  copy:
+    src: bashrc.j2
+    dest: "/home/{{ item.name }}/.bashrc"
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: '0644'
+  with_items: "{{ users }}"
+  tags: add_user

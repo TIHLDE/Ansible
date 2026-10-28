@@ -1,0 +1,23 @@
+
+# Pakker
+packages:
+  - curl
+  - htop
+  - vim
+  - unzip
+  - zip
+  - ncdu
+
+
+# Brukere
+users:
+  - name: Phillip
+    password: ''
+    ssh_keys:
+    - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB9SmmBjdgxxomWTw5+osn52+oVyjBufQkWhakX6sibP phillipdyb@hotmail.com'
+
+users:
+  - name: Martin
+    password: ''
+    ssh_keys:
+    - ''
